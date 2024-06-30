@@ -1,0 +1,61 @@
+// script.js
+document.getElementById('task-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const taskName = document.getElementById('task-name').value;
+    const taskDeadline = document.getElementById('task-deadline').value;
+    const taskPriority = document.getElementById('task-priority').value;
+    const taskLabel = document.getElementById('task-label').value;
+
+    const task = document.createElement('div');
+    task.classList.add('task');
+    task.setAttribute('data-priority', taskPriority);
+
+    task.innerHTML = `
+        <div class="task-name">${taskName}</div>
+        <div class="task-details">
+            <p>Deadline: ${taskDeadline}</p>
+            <p>Priority: ${taskPriority}</p>
+            <p>Label: ${taskLabel}</p>
+        </div>
+        <div class="task-actions">
+            <button class="edit-btn">Edit</button>
+            <button class="delete-btn">Delete</button>
+        </div>
+    `;
+
+    document.getElementById('tasks-container').appendChild(task);
+
+    document.getElementById('task-form').reset();
+
+    addTaskActions(task);
+});
+
+function addTaskActions(task) {
+    task.querySelector('.edit-btn').addEventListener('click', () => {
+        editTask(task);
+    });
+
+    task.querySelector('.delete-btn').addEventListener('click', () => {
+        deleteTask(task);
+    });
+}
+
+function editTask(task) {
+    const taskName = task.querySelector('.task-name').innerText;
+    const taskDetails = task.querySelector('.task-details').innerHTML;
+    const deadline = taskDetails.match(/Deadline: (\d{4}-\d{2}-\d{2})/)[1];
+    const priority = taskDetails.match(/Priority: (\w+)/)[1];
+    const label = taskDetails.match(/Label: (\w+)/)[1];
+
+    document.getElementById('task-name').value = taskName;
+    document.getElementById('task-deadline').value = deadline;
+    document.getElementById('task-priority').value = priority;
+    document.getElementById('task-label').value = label;
+
+    task.remove();
+}
+
+function deleteTask(task) {
+    task.remove();
+}
